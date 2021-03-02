@@ -2,7 +2,6 @@ package cleaner
 
 import (
 	"log"
-	"sync"
 )
 
 // Cleaner represents a module to be cleaned
@@ -26,20 +25,13 @@ func AddCleaner(c Cleaner) {
 // CleanUp runs all cleaners iteratively,
 // in their separate goroutine
 func CleanUp() {
-	var wg sync.WaitGroup
-	wg.Add(len(Cleaners))
-
 	log.Println("Cleaning up")
 
 	for i := 0; i < len(Cleaners); i++ {
-		go func(i int) {
-			defer wg.Done()
-			c := Cleaners[len(Cleaners)-i-1]
+		c := Cleaners[len(Cleaners)-i-1]
 
-			c.CleanUp()
-			log.Println(c.Name, "cleaned up")
-		}(i)
+		c.CleanUp()
+		log.Println(c.Name, "cleaned up")
 	}
-	wg.Wait()
 	log.Println("Cleaned up")
 }
