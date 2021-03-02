@@ -15,26 +15,26 @@ type Cleaner struct {
 	CleanUp func()
 }
 
-// cleaners is the list of cleaners
-var cleaners []Cleaner
+// Cleaners is the list of Cleaners
+var Cleaners []Cleaner
 
 // AddCleaner appends to the cleaners array
 func AddCleaner(c Cleaner) {
-	cleaners = append(cleaners, c)
+	Cleaners = append(Cleaners, c)
 }
 
 // CleanUp runs all cleaners iteratively,
 // in their separate goroutine
 func CleanUp() {
 	var wg sync.WaitGroup
-	wg.Add(len(cleaners))
+	wg.Add(len(Cleaners))
 
 	log.Println("Cleaning up")
 
-	for i := 0; i < len(cleaners); i++ {
+	for i := 0; i < len(Cleaners); i++ {
 		go func(i int) {
 			defer wg.Done()
-			c := cleaners[i]
+			c := Cleaners[len(Cleaners)-i-1]
 
 			c.CleanUp()
 			log.Println(c.Name, "cleaned up")
